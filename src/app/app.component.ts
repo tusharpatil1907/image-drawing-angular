@@ -20,6 +20,7 @@ export class AppComponent {
   private undoStack: ImageData[] = [];
   private redoStack: ImageData[] = [];
   fileselected: boolean = false
+  isErasor:boolean = false
   ngAfterViewInit() {
 
     this.pencil = this.canvas.nativeElement.getContext('2d')!;
@@ -54,10 +55,12 @@ export class AppComponent {
     this.saveState();
   }
 
+
   stopDrawing() {
     this.isDrawing = false;
     this.pencil.closePath();
   }
+ 
 
   draw(event: MouseEvent) {
     if (!this.isDrawing) return;
@@ -65,6 +68,8 @@ export class AppComponent {
     this.pencil.lineTo(event.offsetX, event.offsetY);
     this.pencil.stroke();
   }
+
+ 
 
 
   resetCanvas() {
@@ -108,5 +113,83 @@ export class AppComponent {
 
   changeColor(color: string) {
     this.color = color;
-    }
+  }
+
+  size(size:number) {
+    this.pencil.globalCompositeOperation = 'source-over';
+    this.pencil.lineWidth = size; 
+  }
+
+  toggleEraser() {
+    this.isErasor = !this.isErasor;
+  }
+  
+  
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ // draw(event: MouseEvent) {
+  //   if (!this.isDrawing) return;
+  
+  //   if (this.isErasor) {
+      
+  //     this.pencil.globalCompositeOperation = 'destination-out';
+  //   } else {
+   
+  //     this.pencil.globalCompositeOperation = 'source-over';
+  //     this.pencil.strokeStyle = this.color;
+  //     this.pencil.lineWidth = 5; 
+  //   }
+  
+  //   this.pencil.lineTo(event.offsetX, event.offsetY);
+  //   this.pencil.stroke();
+  // }
+
+
+
+
+
+  
+  // startDrawing(event: MouseEvent) {
+  //   this.isDrawing = true;
+  //   this.pencil.beginPath();
+  //   this.pencil.moveTo(event.offsetX, event.offsetY);
+  
+  //   // Reset to default drawing mode
+  //   if (!this.isErasor) {
+  //     this.pencil.globalCompositeOperation = 'source-over';
+  //   } else {
+  //     this.pencil.globalCompositeOperation = 'destination-out';
+  //   }
+  
+  //   // Save state for undo/redo
+  //   this.saveState();
+  // }
+  

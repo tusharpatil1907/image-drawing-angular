@@ -9,7 +9,9 @@
   
   (mousedown)="startDrawing($event)"
   (mouseup)="stopDrawing()"
-  (mousemove)="draw($event)">
+  (mousemove)="draw($event)"
+  >
+  
 </canvas>
 
 <br>
@@ -23,6 +25,14 @@ color changes
 <button (click)="resetCanvas()">Reset</button>
 <br>
 <br>
-<button (click)="undo()">undo</button><button (click)="redo()">redo</button>
+<button (click)="undo()">undo</button>
+<button (click)="redo()">redo</button>
+<button (click)="size(5)">linesize 1</button>
+<button (click)="size(10)">linesize 2</button>
+<button (click)="size(15)">linesize 3</button>
+<button (click)="size(20)">linesize 4</button>
+
+<br>
+<button (click)="toggleEraser()">Erase</button>
 </div>
 
