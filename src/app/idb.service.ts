@@ -15,7 +15,7 @@ export class IdbService {
 private async initDb() {
   const db = await openDB(this.dbName, 1, {
     upgrade(db) {
-      db.createObjectStore('myStore');
+      db.createObjectStore('mystate');
     },
   });
 }
