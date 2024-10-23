@@ -28,7 +28,7 @@ export class AppComponent implements OnInit{
     const canvasData = this.canvas.nativeElement.toDataURL();
     localStorage.setItem('canvasState', canvasData);
     localStorage.setItem('isImageLoaded',this.fileselected.toString());
-    this.saveData(this.undoStack,this.redoStack);
+    // this.saveData(this.undoStack,this.redoStack);
   }
 
   // loads image from localstorage 
@@ -74,28 +74,30 @@ export class AppComponent implements OnInit{
     this.undoStack.push(canvasData);
     this.redoStack = []; 
     this.saveToLocal(); 
-
   }
 
 
-
+//implementation.
 
 
   // loads local storage data on page init
-  ngOnInit():void {
-    this.loadData()
-    this.pencil = this.canvas.nativeElement.getContext('2d')!;
+  ngOnInit(): void {
+    this.loadData();
+    // Add the willReadFrequently option here
+    this.pencil = this.canvas.nativeElement.getContext('2d', { willReadFrequently: true })!;
     this.loadCanvasState();
-    this.fileselected = localStorage.getItem('isImageLoaded') ==  "true" ? true:false ;
+    this.fileselected = localStorage.getItem('isImageLoaded') === "true";
   }
+  
 
+  //detects the input box changes whenever the file gets uploaded and it saves to local
   onFileSelected(event: Event):void {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
         this.img = new Image();
-        this.img.src = e.target?.result as string;
+        this.img.src = e.target?.result as string ?? localStorage.getItem('canvasState') ?? '';
         this.img.onload = () => {
           this.pencil.drawImage(this.img, 0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
           this.fileselected = true
@@ -103,14 +105,23 @@ export class AppComponent implements OnInit{
         };
       };
       reader.readAsDataURL(file);
+    // }else{
+    //   const reader = new FileReader();
+    //   reader.onload = (e)=>{
+    //     this.img = new Image();
+        
+    //   }
     }
+   
   }
 
+  //triggers when we onmousedown also records the position 
   startDrawing(event: MouseEvent):void {
     this.isDrawing = true;
     this.pencil.strokeStyle = this.color;
     this.pencil.beginPath();
     this.pencil.moveTo(event.offsetX, event.offsetY);
+    console.log(this.pencil.moveTo(event.offsetX, event.offsetY));
    
     this.saveState();
   }
@@ -131,11 +142,15 @@ export class AppComponent implements OnInit{
   resetCanvas(): void {
     const currentImageData = this.pencil.getImageData(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
     this.pencil.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+    this.undoStack = [];
+    this.redoStack = [];
+    debugger;
+    // this.loadCanvasState()
     if (this.img) {
       this.pencil.drawImage(this.img, 0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
     }
-    this.undoStack = [];
-    this.redoStack = [];
+  
+
     this.saveState();
     this.saveToLocal();
   }
@@ -168,7 +183,6 @@ export class AppComponent implements OnInit{
   }
 
   size(size:number):void {
-    this.pencil.globalCompositeOperation = 'source-over';
     this.pencil.lineWidth = size; 
   }
 
